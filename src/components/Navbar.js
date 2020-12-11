@@ -1,42 +1,44 @@
 import React from "react";
-import {
-  NavButton,
-  Header,
-  Dialog,
-  DialogButton
-} from "../index.styles";
+import { NavButton, Header, Dialog, DialogButton } from "../index.styles";
 import logo from "../img/white-thunder.png";
-import CustomDialog from "./Dialog";
+import { Menu, MenuItem } from "@material-ui/core";
 
 const Navbar = () => {
   const handleRedirect = (url) => {
     window.open(url, "_blank");
+    handleClose();
   };
 
-  const [open, setOpen] = React.useState(false);
+  const [anchorElement, setAnchorElement] = React.useState(null);
 
   const handleClose = () => {
-    setOpen(false);
-  }
+    setAnchorElement(null);
+  };
 
+  const handleMenu = (event) => {
+    setAnchorElement(event.currentTarget);
+  }
   const itemsList = [
     {
-      id: '1',
+      id: "1",
       url: "https://www.github.com/MarcoCastroCarreon",
-      name: "Github"
+      name: "Github",
     },
     {
-      id: '2',
-      url: "https://www.linkedin.com/in/marco-antonio-castro-carreon-10274a1a5/",
-      name: "LinkedIn"
-    }
-  ]
+      id: "2",
+      url:
+        "https://www.linkedin.com/in/marco-antonio-castro-carreon-10274a1a5/",
+      name: "LinkedIn",
+    },
+  ];
 
   return (
     <Header>
       <div>
         <Dialog>
-          <DialogButton focusColor="#71d468" onClick={() => setOpen(!open)}>Social Media</DialogButton>
+          <DialogButton focusColor="#71d468" onClick={handleMenu}>
+            Social Media
+          </DialogButton>
         </Dialog>
         <NavButton
           focusColor="#71d468"
@@ -61,7 +63,19 @@ const Navbar = () => {
           Fast Tasks
         </span>
       </div>
-      <CustomDialog onClose={handleClose} open={open} title="Social Media" itemsList={itemsList}/>
+      <Menu
+        open={Boolean(anchorElement)}
+        anchorEl={anchorElement}
+        onClose={handleClose}
+      >
+        {itemsList.length && itemsList.map(item => {
+          return (
+            <MenuItem onClick={() => handleRedirect(item.url)}>
+              {item.name}
+            </MenuItem>
+          )
+        })}
+      </Menu>
     </Header>
   );
 };
